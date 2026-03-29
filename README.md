@@ -1,59 +1,54 @@
-# FrontendTareasProyectos
+# Frontend - Tasks and Projects
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+This project is the frontend for the Tasks and Projects management application. It is developed using the latest Angular features (Standalone Components, Signals) and strictly follows the **Spec Driven Development (SDD)** methodology.
 
-## Development server
+## Project Links (Backend)
 
-To start a local development server, run:
+* **Backend API Repository:** [J-S-M-Code/Integrador-SinTeclados](https://github.com/J-S-M-Code/Integrador-SinTeclados)
 
-```bash
-ng serve
-```
+## Tech Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+* **Framework:** Angular 17+ (Standalone Components, Control Flow, Signals)
+* **Styles & UI:** Tailwind CSS + PrimeNG *(Modern and comprehensive stack, ideal for enterprise management applications)*
+* **Communication:** HttpClient (REST API)
+* **Forms:** Reactive Forms
+* **Environment:** Node.js v24.14.0
 
-## Code scaffolding
+## Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+To run this project locally, make sure you have the following installed:
+* [Node.js](https://nodejs.org/) (Version v24.14.0)
+* Angular CLI (`npm install -g @angular/cli`)
 
-```bash
-ng generate component component-name
-```
+## Local Installation & Execution
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+1.  **Clone the repository:**
+    ```bash
+    git clone <YOUR_REPOSITORY_URL>
+    ```
 
-```bash
-ng generate --help
-```
+2.  **Navigate to the project directory:**
+    ```bash
+    cd frontend-tareas-proyectos
+    ```
 
-## Building
+3.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-To build the project run:
+4.  **Run the development server:**
+    ```bash
+    ng serve
+    ```
+    *The application will be available at `http://localhost:4200/`.*
 
-```bash
-ng build
-```
+## Methodology: Spec Driven Development (SDD)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This project does not implement any code without a prior specification. Each new feature is first documented in a `SPEC.md` file within its respective branch. 
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The workflow is as follows:
+1. Create the branch `feature/feature-name`.
+2. Write the `SPEC.md` file (Definition of endpoints, business constraints, technical guidelines, and acceptance criteria).
+3. Implement the base code validating against the specification.
+4. Submit a documented and reviewed Pull Request.
