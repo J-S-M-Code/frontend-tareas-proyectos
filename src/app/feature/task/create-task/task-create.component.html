@@ -1,0 +1,61 @@
+<div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">Crear Nueva Tarea</h2>
+
+  <p-message 
+    *ngIf="isProjectClosed()" 
+    severity="error" 
+    text="No se pueden agregar tareas a un proyecto cerrado." 
+    styleClass="w-full mb-4">
+  </p-message>
+
+  <p-message 
+    *ngIf="errorMessage()" 
+    severity="error" 
+    [text]="errorMessage()!" 
+    styleClass="w-full mb-4">
+  </p-message>
+
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    
+    <div class="flex flex-col gap-2">
+      <label for="title" class="font-semibold text-sm">Título de la tarea <span class="text-red-500">*</span></label>
+      <input pInputText id="title" formControlName="title" placeholder="Ej: Diseñar la base de datos" />
+      <small class="text-red-500" *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
+        El título es obligatorio.
+      </small>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="estimatedHours" class="font-semibold text-sm">Horas estimadas <span class="text-red-500">*</span></label>
+      <p-inputNumber 
+        inputId="estimatedHours" 
+        formControlName="estimatedHours" 
+        placeholder="Ej: 5" 
+        [min]="0"
+        [showButtons]="true">
+      </p-inputNumber>
+      <small class="text-red-500" *ngIf="taskForm.get('estimatedHours')?.hasError('min') && taskForm.get('estimatedHours')?.touched">
+        Las horas deben ser mayores a 0.
+      </small>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="assignee" class="font-semibold text-sm">Responsable <span class="text-red-500">*</span></label>
+      <input pInputText id="assignee" formControlName="assignee" placeholder="Ej: Juan Pérez" />
+      <small class="text-red-500" *ngIf="taskForm.get('assignee')?.invalid && taskForm.get('assignee')?.touched">
+        El responsable es obligatorio.
+      </small>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+      <p-button 
+        label="Guardar Tarea" 
+        icon="pi pi-check" 
+        type="submit" 
+        [loading]="isLoading()" 
+        [disabled]="taskForm.invalid || isProjectClosed()">
+      </p-button>
+    </div>
+
+  </form>
+</div>
