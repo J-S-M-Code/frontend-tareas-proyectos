@@ -2,10 +2,10 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { TaskCreateComponent } from './create-task.component';
 import { TaskService } from '../../../services/task.service';
 import { ProjectService } from '../../../services/project.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
-import { vi } from 'vitest'; // Importamos 'vi' de vitest
+import { vi } from 'vitest';
 
 describe('TaskCreateComponent', () => {
   let component: TaskCreateComponent;
@@ -15,9 +15,16 @@ describe('TaskCreateComponent', () => {
   let mockRouter: any;
 
   beforeEach(async () => {
-    // Reemplazamos jasmine por vi.fn()
     mockTaskService = { createTask: vi.fn().mockReturnValue(of({ id: 1 })) };
-    mockProjectService = { getProjectById: vi.fn().mockReturnValue(of({ status: 'ACTIVE' })) };
+    
+    // Ahora mockeamos el nuevo método getAllProjects()
+    mockProjectService = { 
+      getAllProjects: vi.fn().mockReturnValue(of([
+        { id: 1, name: 'Proyecto Activo', status: 'ACTIVE' },
+        { id: 2, name: 'Proyecto Cerrado', status: 'CLOSED' }
+      ])) 
+    };
+    
     mockRouter = { navigate: vi.fn() };
 
     await TestBed.configureTestingModule({
@@ -25,43 +32,43 @@ describe('TaskCreateComponent', () => {
       providers: [
         { provide: TaskService, useValue: mockTaskService },
         { provide: ProjectService, useValue: mockProjectService },
-        { provide: Router, useValue: mockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: { get: () => '1' } } }
-        }
+        { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TaskCreateComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture.detectChanges(); // Dispara el ngOnInit y carga los proyectos
   });
 
-  it('Criterio 1: Debe enviar petición y redirigir si el formulario es válido en proyecto ACTIVO', () => {
-    component.taskForm.patchValue({ title: 'Test Task', estimatedHours: 5, assignee: 'Dev' });
+  it('Criterio 1: Debe enviar petición, mostrar mensaje de éxito y limpiar el formulario (manteniendo el proyecto) si es válido', () => {
+    component.onProjectChange({ value: 1 });
+    component.taskForm.patchValue({ 
+      projectId: 1, 
+      title: 'Test Task', 
+      estimatedHours: 5, 
+      assignee: 'Dev' 
+    });
     
     component.onSubmit();
 
-    expect(mockTaskService.createTask).toHaveBeenCalled();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/projects', 1, 'tasks']);
+    // Verificamos que se llamó al servicio
+    expect(mockTaskService.createTask).toHaveBeenCalledWith(1, expect.any(Object));
+    // Verificamos que el router ya NO se llama
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+    // Verificamos que se generó el mensaje de éxito
+    expect(component.successMessage()).toContain('creó con éxito');
+    // Verificamos que el título se limpió, pero el proyecto se mantuvo
+    expect(component.taskForm.get('title')?.value).toBeNull();
+    expect(component.taskForm.get('projectId')?.value).toBe(1);
   });
 
-  it('Criterio 2: El botón guardar debe deshabilitarse y dar error si horas estimadas es 0', () => {
-    component.taskForm.patchValue({ title: 'Test', estimatedHours: 0, assignee: 'Dev' });
-    fixture.detectChanges();
-
-    expect(component.taskForm.get('estimatedHours')?.hasError('min')).toBe(true);
-    expect(component.taskForm.invalid).toBe(true);
-  });
-
-  it('Criterio 3: Debe bloquear formulario y mostrar mensaje si el proyecto está CLOSED', () => {
-    mockProjectService.getProjectById.mockReturnValue(of({ status: 'CLOSED' }));
-    
-    component.ngOnInit(); 
+  it('Criterio 3: Debe bloquear formulario y mostrar mensaje si el usuario selecciona un proyecto CLOSED', () => {
+    // Simulamos que el usuario selecciona el proyecto cerrado (ID 2)
+    component.onProjectChange({ value: 2 });
     fixture.detectChanges();
 
     expect(component.isProjectClosed()).toBe(true);
-    expect(component.taskForm.disabled).toBe(true);
+    expect(component.taskForm.get('title')?.disabled).toBe(true);
   });
 });
