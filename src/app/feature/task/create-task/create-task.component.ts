@@ -23,7 +23,7 @@ import { MessageModule } from 'primeng/message';
     ButtonModule,
     MessageModule
   ],
-  templateUrl: './task-create.component.html',
+  templateUrl: './create-task.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskCreateComponent implements OnInit {
