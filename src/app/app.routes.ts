@@ -1,20 +1,27 @@
 import { Routes } from '@angular/router';
-import { CreateProjectComponent } from './feature/projects/create-project/create-project.component';
+import { AppComponent } from './app'; 
+import { CreateProjectComponent } from './feature/projects/create-project/create-project.component'; 
+import { TaskCreateComponent } from './feature/task/create-task/create-task.component'; 
 
 export const routes: Routes = [
-  // Cuando la ruta está vacía (localhost:4200/), carga el componente de crear
-  {
-    path: '',
+  { 
+    path: '', 
+    component: AppComponent,
+    title: 'Inicio - Gestión de Tareas y Proyectos' // Título opcional para la pestaña del navegador
+  }, 
+  { 
+    path: 'projects/create', 
     component: CreateProjectComponent,
+    title: 'Crear Proyecto'
   },
-  // Opcional: dejamos la ruta explícita armada para el futuro
-  {
-    path: 'proyectos/crear',
-    component: CreateProjectComponent,
+  { 
+    path: 'tasks/create', 
+    component: TaskCreateComponent,
+    title: 'Crear Tarea'
   },
-  // Si el usuario ingresa una URL que no existe, lo mandamos a la principal
-  {
-    path: '**',
-    redirectTo: '',
-  },
+  // Redirección comodín en caso de rutas no encontradas (Buena práctica)
+  { 
+    path: '**', 
+    redirectTo: '' 
+  }
 ];
