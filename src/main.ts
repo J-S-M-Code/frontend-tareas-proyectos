@@ -1,7 +1,8 @@
-import 'zone.js'; // <-- ¡ESTA ES LA LÍNEA MÁGICA QUE FALTA!
+import 'zone.js';
 
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
-import { App } from './app/app';
+// Importamos el nuevo caparazón
+import { AppComponent } from './app/app'; 
 
-bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+bootstrapApplication(AppComponent, appConfig).catch((err) => console.error(err));
