@@ -26,11 +26,21 @@
 
             <!-- Selector de Tarea -->
             <div class="flex flex-col gap-1">
-                <label for="taskId" class="text-sm font-medium text-gray-700">Tarea <span
-                        class="text-red-500">*</span></label>
-                <p-select id="taskId" formControlName="taskId" [options]="tasks()" optionLabel="title" optionValue="id"
-                    placeholder="Selecciona una tarea" [loading]="isTasksLoading()"
-                    emptyMessage="No hay tareas en este proyecto" styleClass="w-full">
+                <label for="taskId" class="text-sm font-medium" 
+                       [ngClass]="form.controls.taskId.disabled ? 'text-gray-400' : 'text-gray-700'">
+                       Tarea <span class="text-red-500">*</span>
+                </label>
+                
+                <p-select id="taskId" 
+                    formControlName="taskId" 
+                    [options]="tasks()" 
+                    optionLabel="title" 
+                    optionValue="id"
+                    placeholder="Selecciona una tarea" 
+                    [loading]="isTasksLoading()"
+                    emptyMessage="No hay tareas en este proyecto" 
+                    styleClass="w-full"
+                    [disabled]="form.controls.taskId.disabled">
                 </p-select>
             </div>
         </div>
