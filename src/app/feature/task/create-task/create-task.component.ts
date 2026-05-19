@@ -25,7 +25,7 @@ import { SelectModule } from 'primeng/select';
     MessageModule,
     SelectModule
   ],
-  templateUrl: './task-create.component.html',
+  templateUrl: './create-task.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskCreateComponent implements OnInit {

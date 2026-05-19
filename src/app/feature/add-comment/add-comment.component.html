@@ -1,0 +1,77 @@
+<div class="p-6 max-w-2xl mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
+    <h3 class="text-xl font-semibold text-gray-800 mb-6">Agregar Comentario a Tarea</h3>
+
+    <!-- Mensajes de Alerta -->
+    @if (successMessage()) {
+    <p-message severity="success" [text]="successMessage() ?? undefined" styleClass="w-full mb-4 block"></p-message>
+    }
+    @if (errorMessage()) {
+    <p-message severity="error" [text]="errorMessage() ?? undefined" styleClass="w-full mb-4 block"></p-message>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+
+        <!-- Fila de Selectores (Proyecto y Tarea) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- Selector de Proyecto -->
+            <div class="flex flex-col gap-1">
+                <label for="projectId" class="text-sm font-medium text-gray-700">Proyecto <span
+                        class="text-red-500">*</span></label>
+                <p-select id="projectId" formControlName="projectId" [options]="projects()" optionLabel="name"
+                    optionValue="id" placeholder="Selecciona un proyecto" [loading]="isProjectsLoading()"
+                    styleClass="w-full">
+                </p-select>
+            </div>
+
+            <!-- Selector de Tarea -->
+            <div class="flex flex-col gap-1">
+                <label for="taskId" class="text-sm font-medium" 
+                       [ngClass]="form.controls.taskId.disabled ? 'text-gray-400' : 'text-gray-700'">
+                       Tarea <span class="text-red-500">*</span>
+                </label>
+                
+                <p-select id="taskId" 
+                    formControlName="taskId" 
+                    [options]="tasks()" 
+                    optionLabel="title" 
+                    optionValue="id"
+                    placeholder="Selecciona una tarea" 
+                    [loading]="isTasksLoading()"
+                    emptyMessage="No hay tareas en este proyecto" 
+                    styleClass="w-full"
+                    [disabled]="form.controls.taskId.disabled">
+                </p-select>
+            </div>
+        </div>
+
+        <!-- Separador -->
+        <hr class="border-gray-200 my-2" />
+
+        <!-- Input: Autor -->
+        <div class="flex flex-col gap-1">
+            <label for="author" class="text-sm font-medium text-gray-700">Autor <span
+                    class="text-red-500">*</span></label>
+            <input pInputText id="author" formControlName="author" placeholder="Tu nombre" class="w-full"
+                [ngClass]="{'ng-invalid ng-dirty': form.controls.author.invalid && form.controls.author.touched}" />
+        </div>
+
+        <!-- Input: Comentario -->
+        <div class="flex flex-col gap-1">
+            <label for="text" class="text-sm font-medium text-gray-700">Comentario <span
+                    class="text-red-500">*</span></label>
+            <textarea pInputTextarea id="text" formControlName="text" rows="4" placeholder="Escribe tu observación..."
+                class="w-full resize-y"
+                [ngClass]="{'ng-invalid ng-dirty': form.controls.text.invalid && form.controls.text.touched}">
+      </textarea>
+        </div>
+
+        <!-- Botón Submit -->
+        <div class="flex justify-end mt-4">
+            <p-button type="submit" label="Guardar Comentario" icon="pi pi-check" [loading]="isSubmitting()"
+                [disabled]="form.invalid || isSubmitting()">
+            </p-button>
+        </div>
+
+    </form>
+</div>

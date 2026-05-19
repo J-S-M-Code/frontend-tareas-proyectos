@@ -1,27 +1,32 @@
 import { Routes } from '@angular/router';
-import { AppComponent } from './app'; 
-import { CreateProjectComponent } from './feature/projects/create-project/create-project.component'; 
-import { TaskCreateComponent } from './feature/task/create-task/create-task.component'; 
+import { AppComponent } from './app';
+import { CreateProjectComponent } from './feature/projects/create-project/create-project.component';
+import { TaskCreateComponent } from './feature/task/create-task/create-task.component';
+import { AddCommentComponent } from './feature/add-comment/add-comment.component';
 
 export const routes: Routes = [
-  { 
-    path: '', 
+  {
+    path: '',
     component: AppComponent,
-    title: 'Inicio - Gestión de Tareas y Proyectos' // Título opcional para la pestaña del navegador
-  }, 
-  { 
-    path: 'projects/create', 
+    title: 'Inicio - Gestión de Tareas y Proyectos'
+  },
+  {
+    path: 'projects/create',
     component: CreateProjectComponent,
     title: 'Crear Proyecto'
   },
-  { 
-    path: 'tasks/create', 
+  {
+    path: 'tasks/create',
     component: TaskCreateComponent,
     title: 'Crear Tarea'
   },
-  // Redirección comodín en caso de rutas no encontradas (Buena práctica)
   { 
-    path: '**', 
-    redirectTo: '' 
+    path: 'comment/create',
+    component: AddCommentComponent,
+    title: 'Agregar Comentario'
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
