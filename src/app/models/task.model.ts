@@ -7,6 +7,17 @@ export interface TaskRequest {
   finishedAt: string;
 }
 
+// NUEVA INTERFAZ AÑADIDA
+export interface Task {
+  id: number;
+  title: string;
+  estimatedHours: number;
+  assignee: string;
+  status: string;
+  createdAt?: string;
+  finishedAt?: string;
+}
+
 export interface Project {
   id: number;
   name: string;

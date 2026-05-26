@@ -3,6 +3,7 @@ import { AppComponent } from './app';
 import { CreateProjectComponent } from './feature/projects/create-project/create-project.component';
 import { TaskCreateComponent } from './feature/task/create-task/create-task.component';
 import { AddCommentComponent } from './feature/add-comment/add-comment.component';
+import { TasksByStatusComponent } from './feature/task/tasks-by-status/tasks-by-status.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,10 @@ export const routes: Routes = [
     path: 'comment/create',
     component: AddCommentComponent,
     title: 'Agregar Comentario'
+  },
+  { 
+    path: 'tasks/by-status', 
+    component: TasksByStatusComponent 
   },
   {
     path: '**',
