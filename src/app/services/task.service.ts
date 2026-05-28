@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TaskRequest, Task } from '../models/task.model';
+import { environment } from '../environments/environment';
 
 export interface TaskResponseDTO {
   id: number;
@@ -14,7 +15,7 @@ export interface TaskResponseDTO {
 })
 export class TaskService {
   private http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080'; 
+  private readonly apiUrl = environment.apiUrl;
 
   createTask(projectId: number, task: TaskRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}/projects/${projectId}/tasks`, task);

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project, ProjectCreateDTO } from '../models/project.model';
+import { environment } from '../environments/environment';
 
 export type ProjectStatus = 'PLANNED' | 'ACTIVE' | 'CLOSED';
 
@@ -16,11 +17,10 @@ export interface ProjectResponseDTO {
 })
 export class ProjectService {
   private readonly http = inject(HttpClient);
-  // Asegúrate de que esta URL coincida con la configuración de tu entorno
-  private readonly apiUrl = 'http://localhost:8080/projects';
+  private readonly apiUrl = environment.apiUrl;
 
   createProject(project: ProjectCreateDTO): Observable<ProjectResponseDTO> {
-    return this.http.post<ProjectResponseDTO>(this.apiUrl, project);
+    return this.http.post<ProjectResponseDTO>(`${this.apiUrl}/projects`, project);
   }
 
   getProjectById(projectId: number): Observable<ProjectResponseDTO> {

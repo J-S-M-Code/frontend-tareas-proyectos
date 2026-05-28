@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export interface TaskCommentRequestDTO {
   text: string;
@@ -18,10 +19,10 @@ export interface CommentResponseDTO {
 export class CommentTaskService {
   private readonly http = inject(HttpClient);
   // Asegúrate de que esta URL coincida con la configuración de tu entorno
-  private readonly apiUrl = 'http://localhost:8080/projects';
+  private readonly apiUrl = environment.apiUrl;
 
   addComment(projectId: number, taskId: number, comment: TaskCommentRequestDTO): Observable<CommentResponseDTO> {
-    const url = `${this.apiUrl}/${projectId}/tasks/${taskId}/comments`;
+    const url = `${this.apiUrl}/projects/${projectId}/tasks/${taskId}/comments`;
     return this.http.post<CommentResponseDTO>(url, comment);
   }
 }
