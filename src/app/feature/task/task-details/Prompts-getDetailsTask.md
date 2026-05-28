@@ -68,3 +68,21 @@ Revisar archivo `Prompts-getDetailsTask.md`
 ```
 El template usa *ngIf y *ngFor (sintaxis clásica de Angular), mientras que la Spec define como lineamiento usar "Angular Standalone" y el agente generó las tarjetas usando *ngFor clásico. Esto no es un error funcional, pero el proyecto debería adoptar una convención consistente. Si el equipo ya usa @if/@for en otros componentes (como se ve en el PR de teslavmd), lo ideal es unificar. El agente puede generar ambas sintaxis — lo importante es indicarle en el prompt cuál usar.
 ```
+
+## Iteración 2: Correcciones de Tipado Estricto y PrimeNG
+**Propósito:** Solucionar errores de compilación (`strictTemplates` de Angular) y ajustes de nombres de métodos.
+
+**Prompt utilizado:**
+> "Corrige los siguientes errores en el código generado: 
+> 1. El método del servicio se llama `getTasksByProject` (no by Id). 
+> 2. Tipa los parámetros de los `.subscribe` (`tasks: TaskResponseDTO[]` y `err: HttpErrorResponse`). 
+> 3. En el HTML de PrimeNG, la severidad de advertencia es `warn` (no `warning`). 
+> 4. En el HTML de los comentarios, usa solo `comment.text` porque `content` no existe en la interfaz."
+
+## Iteración 3: Prevención de caídas y ajuste visual de inputs
+**Propósito:** Evitar que Angular rompa la vista si el backend envía los comentarios nulos y arreglar textos invisibles en los menús desplegables.
+
+**Prompt utilizado:**
+> "Tenemos dos problemas: 
+> 1. Si la tarea no tiene comentarios, el backend no envía el array y Angular da error al leer `.length`. Intercepta la respuesta en el `next:` del subscribe y haz `if (!data.comments) { data.comments = []; }`. 
+> 2. El texto de los `<select>` se ve en blanco. Agrégales la clase `text-gray-900` de Tailwind para forzar el contraste correcto."
