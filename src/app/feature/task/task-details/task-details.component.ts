@@ -6,6 +6,7 @@ import { ProjectService } from '../../../services/project.service';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
+import { ProjectResponseDTO } from '../../../services/project.service';
 
 @Component({
   selector: 'app-task-details',
@@ -18,8 +19,8 @@ export class TaskDetailsComponent implements OnInit {
   private projectService = inject(ProjectService);
 
   // Signals para las listas de los selectores
-  projects = signal<any[]>([]); // Puedes tiparlo con Project si tienes el modelo importado
-  projectTasks = signal<TaskResponseDTO[]>([]); // Tipado correcto con el DTO
+  projects = signal<ProjectResponseDTO[]>([]); 
+  projectTasks = signal<TaskResponseDTO[]>([]); 
 
   // Signals para la selección actual
   selectedProjectId = signal<number | null>(null);
@@ -42,8 +43,7 @@ export class TaskDetailsComponent implements OnInit {
         this.projects.set(data);
         this.isLoading.set(false);
       },
-      error: (err: HttpErrorResponse) => { // Tipado de error
-        console.error('Error al cargar proyectos', err);
+      error: (err: HttpErrorResponse) => { 
         this.errorMessage.set('Ocurrió un error al cargar la lista de proyectos.');
         this.isLoading.set(false);
       }
@@ -73,8 +73,7 @@ export class TaskDetailsComponent implements OnInit {
         this.projectTasks.set(tasks);
         this.isLoading.set(false);
       },
-      error: (err: HttpErrorResponse) => { // Tipado explícito para 'err'
-        console.error('Error al cargar tareas', err);
+      error: (err: HttpErrorResponse) => { 
         this.errorMessage.set('Error al cargar las tareas de este proyecto.');
         this.isLoading.set(false);
       }
@@ -111,7 +110,6 @@ export class TaskDetailsComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err: HttpErrorResponse) => {
-        console.error('Error loading task details:', err);
         if (err.status === 404) {
           this.errorMessage.set('La tarea solicitada no existe o fue eliminada.');
         } else if (err.status === 400) {

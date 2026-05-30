@@ -1,4 +1,4 @@
-# SPEC: Obtener Detalles de la Tarea (Get Deatils Task)
+# SPEC: Obtener Detalles de la Tarea (Get Deatails Task)
 
 ## Nombre de la feature
 Get Task Details (Visualización de los detalles de una tarea y sus comentarios).
@@ -31,7 +31,6 @@ Implementar una vista que permita al usuario consultar la información detallada
   - `isLoading()` para mostrar el spinner mientras se resuelve la petición.
   - `errorMessage()` para gestionar el feedback en caso de errores (ej. 404 o 500).
 - **Servicios:** Extender el `TaskService` existente, inyectando `HttpClient` para realizar la petición GET correspondiente. Se debe mapear la respuesta estricta a una interfaz `TaskWithComments` en el frontend.
-- **Ruteo:** El componente debe capturar dinámicamente los parámetros `projectId` y `taskId` desde la URL utilizando `ActivatedRoute`.
 
 ## Criterios de aceptación
 
