@@ -1,31 +1,45 @@
-<div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8 border border-gray-200">
-  <h2 class="text-2xl font-bold mb-6 text-gray-900">Crear Nueva Tarea</h2>
+<div class="mb-6" *ngIf="preselectedProjectId()">
+  <a [routerLink]="['/projects', preselectedProjectId()]" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-2 transition-colors w-fit">
+    <i class="pi pi-arrow-left"></i> Volver al Proyecto
+  </a>
+</div>
+
+<div class="max-w-3xl mx-auto p-8 bg-white shadow-xl shadow-indigo-100/50 rounded-3xl mt-4 border border-gray-100">
+  <div class="flex items-center gap-4 mb-8 border-b border-gray-100 pb-6">
+    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-lg">
+      <i class="pi pi-check-square text-2xl"></i>
+    </div>
+    <div>
+      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Crear Nueva Tarea</h2>
+      <p class="text-gray-500 mt-1">Completa los datos para asignar una nueva tarea al proyecto</p>
+    </div>
+  </div>
 
   <p-message 
     *ngIf="successMessage()" 
     severity="success" 
     [text]="successMessage()!" 
-    styleClass="w-full mb-4">
+    styleClass="w-full mb-6">
   </p-message>
   
   <p-message 
     *ngIf="isProjectClosed()" 
     severity="error" 
     text="No se pueden agregar tareas a un proyecto cerrado." 
-    styleClass="w-full mb-4">
+    styleClass="w-full mb-6">
   </p-message>
 
   <p-message 
     *ngIf="errorMessage()" 
     severity="error" 
     [text]="errorMessage()!" 
-    styleClass="w-full mb-4">
+    styleClass="w-full mb-6">
   </p-message>
 
-  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
     
     <div class="flex flex-col gap-2">
-      <label for="projectId" class="font-semibold text-sm text-gray-900">Seleccionar Proyecto <span class="text-red-500">*</span></label>
+      <label for="projectId" class="font-bold text-sm text-gray-700">Proyecto Asociado <span class="text-red-500">*</span></label>
       
       <p-select 
         id="projectId" 
@@ -35,50 +49,58 @@
         optionValue="id" 
         placeholder="Elige un proyecto..."
         (onChange)="onProjectChange($event)"
+        [disabled]="preselectedProjectId() !== null"
         class="w-full"
-        styleClass="w-full">
+        styleClass="w-full p-2 bg-gray-50 rounded-xl">
       </p-select>
       
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="title" class="font-semibold text-sm text-gray-900">Título de la tarea <span class="text-red-500">*</span></label>
-      <input pInputText id="title" formControlName="title" placeholder="Ej: Diseñar la base de datos" class="text-gray-900" />
-      <small class="text-red-500" *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
-        El título es obligatorio y no puede estar vacío.
-      </small>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2 md:col-span-2">
+        <label for="title" class="font-bold text-sm text-gray-700">Título de la tarea <span class="text-red-500">*</span></label>
+        <input pInputText id="title" formControlName="title" placeholder="Ej: Diseñar la base de datos" class="p-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-indigo-500 transition-colors w-full" />
+        <small class="text-red-500" *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
+          El título es obligatorio y no puede estar vacío.
+        </small>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="estimatedHours" class="font-bold text-sm text-gray-700">Horas estimadas <span class="text-red-500">*</span></label>
+        <p-inputNumber 
+          inputId="estimatedHours" 
+          formControlName="estimatedHours" 
+          placeholder="Ej: 5" 
+          [min]="0"
+          [showButtons]="true"
+          styleClass="w-full"
+          inputStyleClass="p-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-indigo-500 transition-colors w-full">
+        </p-inputNumber>
+        <small class="text-red-500" *ngIf="taskForm.get('estimatedHours')?.hasError('min') && taskForm.get('estimatedHours')?.touched">
+          Las horas deben ser mayores a 0.
+        </small>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="assignee" class="font-bold text-sm text-gray-700">Responsable <span class="text-red-500">*</span></label>
+        <div class="p-input-icon-left w-full">
+          <input pInputText id="assignee" formControlName="assignee" placeholder="Ej: Juan Pérez" class="p-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-indigo-500 transition-colors w-full" />
+        </div>
+        <small class="text-red-500" *ngIf="taskForm.get('assignee')?.invalid && taskForm.get('assignee')?.touched">
+          El responsable es obligatorio.
+        </small>
+      </div>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label for="estimatedHours" class="font-semibold text-sm text-gray-900">Horas estimadas <span class="text-red-500">*</span></label>
-      <p-inputNumber 
-        inputId="estimatedHours" 
-        formControlName="estimatedHours" 
-        placeholder="Ej: 5" 
-        [min]="0"
-        [showButtons]="true"
-        inputStyleClass="text-gray-900">
-      </p-inputNumber>
-      <small class="text-red-500" *ngIf="taskForm.get('estimatedHours')?.hasError('min') && taskForm.get('estimatedHours')?.touched">
-        Las horas deben ser mayores a 0.
-      </small>
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <label for="assignee" class="font-semibold text-sm text-gray-900">Responsable <span class="text-red-500">*</span></label>
-      <input pInputText id="assignee" formControlName="assignee" placeholder="Ej: Juan Pérez" class="text-gray-900" />
-      <small class="text-red-500" *ngIf="taskForm.get('assignee')?.invalid && taskForm.get('assignee')?.touched">
-        El responsable es obligatorio.
-      </small>
-    </div>
-
-    <div class="mt-4 flex justify-end">
+    <div class="mt-8 flex justify-end pt-6 border-t border-gray-100">
       <p-button 
         label="Guardar Tarea" 
         icon="pi pi-check" 
         type="submit" 
         [loading]="isLoading()" 
-        [disabled]="taskForm.invalid || isProjectClosed()">
+        [disabled]="taskForm.invalid || isProjectClosed()"
+        styleClass="p-button-rounded px-6 py-3 font-bold shadow-md hover:shadow-lg transition-all"
+        severity="primary">
       </p-button>
     </div>
 

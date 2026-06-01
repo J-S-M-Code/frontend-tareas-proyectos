@@ -1,22 +1,28 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TaskService, TaskWithComments, TaskResponseDTO } from '../../../services/task.service';
 import { ProjectService } from '../../../services/project.service';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
+import { MessageModule } from 'primeng/message';
 import { ProjectResponseDTO } from '../../../services/project.service';
 
 @Component({
   selector: 'app-task-details',
   standalone: true,
-  imports: [CommonModule, ButtonModule, ProgressSpinnerModule, TagModule],
+  imports: [CommonModule, RouterModule, ButtonModule, ProgressSpinnerModule, TagModule, MessageModule],
   templateUrl: './task-details.component.html'
 })
 export class TaskDetailsComponent implements OnInit {
+  private route = inject(ActivatedRoute);
   private taskService = inject(TaskService);
   private projectService = inject(ProjectService);
+
+  // Mode flag: if accessed via /projects/:projectId/tasks/:taskId, it's hierarchical
+  isHierarchical = signal<boolean>(false);
 
   // Signals para las listas de los selectores
   projects = signal<ProjectResponseDTO[]>([]); 
@@ -32,13 +38,25 @@ export class TaskDetailsComponent implements OnInit {
   errorMessage = signal<string | null>(null);
 
   ngOnInit() {
-    this.loadProjects();
+    this.route.paramMap.subscribe(params => {
+      const pId = params.get('projectId');
+      const tId = params.get('taskId');
+
+      if (pId && tId) {
+        this.isHierarchical.set(true);
+        this.selectedProjectId.set(Number(pId));
+        this.selectedTaskId.set(Number(tId));
+        this.loadTaskDetails(Number(pId), Number(tId));
+      } else {
+        this.isHierarchical.set(false);
+        this.loadProjects();
+      }
+    });
   }
 
   loadProjects() {
     this.isLoading.set(true);
     this.projectService.getAllProjects().subscribe({
-      // Tipado 'data' a any[] por ahora, o al tipo que devuelva tu servicio
       next: (data: any[]) => {
         this.projects.set(data);
         this.isLoading.set(false);
@@ -67,9 +85,8 @@ export class TaskDetailsComponent implements OnInit {
 
   loadTasksForProject(projectId: number) {
     this.isLoading.set(true);
-    // Corrección del nombre del método: getTasksByProject
     this.taskService.getTasksByProject(projectId).subscribe({
-      next: (tasks: TaskResponseDTO[]) => { // Tipado explícito para 'tasks'
+      next: (tasks: TaskResponseDTO[]) => { 
         this.projectTasks.set(tasks);
         this.isLoading.set(false);
       },
@@ -98,10 +115,8 @@ export class TaskDetailsComponent implements OnInit {
     this.errorMessage.set(null);
     this.taskData.set(null);
 
-    // Asegúrate de que el método en el servicio sea el correcto (ej: getTaskDetails o getTaskById)
     this.taskService.getTaskDetails(projectId, taskId).subscribe({
       next: (data: TaskWithComments) => {
-        // SOLUCIÓN AQUÍ: Forzamos a que comments siempre sea un arreglo, incluso si el backend manda null
         if (!data.comments) {
           data.comments = [];
         }

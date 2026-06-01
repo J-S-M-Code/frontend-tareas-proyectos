@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Project, ProjectCreateDTO } from '../models/project.model';
 import { environment } from '../environments/environment';
 
@@ -23,8 +24,10 @@ export class ProjectService {
     return this.http.post<ProjectResponseDTO>(`${this.apiUrl}/projects`, project);
   }
 
-  getProjectById(projectId: number): Observable<ProjectResponseDTO> {
-    return this.http.get<ProjectResponseDTO>(`${this.apiUrl}/${projectId}`);
+  getProjectById(projectId: number): Observable<ProjectResponseDTO | undefined> {
+    return this.http.get<ProjectResponseDTO[]>(`${this.apiUrl}/projects`).pipe(
+      map(projects => projects.find(p => p.id === projectId))
+    );
   }
 
   getAllProjects(): Observable<ProjectResponseDTO[]> {
