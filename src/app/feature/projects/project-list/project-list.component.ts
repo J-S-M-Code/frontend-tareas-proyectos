@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProjectService, ProjectResponseDTO } from '../../../services/project.service';
@@ -11,7 +11,8 @@ import { MessageModule } from 'primeng/message';
   selector: 'app-project-list',
   standalone: true,
   imports: [CommonModule, RouterModule, ButtonModule, ProgressSpinnerModule, TagModule, MessageModule],
-  templateUrl: './project-list.component.html'
+  templateUrl: './project-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectListComponent implements OnInit {
   private projectService = inject(ProjectService);
@@ -34,8 +35,7 @@ export class ProjectListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error(err);
-        this.errorMessage.set('Ocurrió un error al cargar la lista de proyectos.');
+        this.errorMessage.set(err.message);
         this.isLoading.set(false);
       }
     });
