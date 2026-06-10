@@ -4,6 +4,7 @@ import { CreateProjectComponent } from './feature/projects/create-project/create
 import { TaskCreateComponent } from './feature/task/create-task/create-task.component';
 import { AddCommentComponent } from './feature/add-comment/add-comment.component';
 import { TasksByStatusComponent } from './feature/task/tasks-by-status/tasks-by-status.component';
+import { TaskDetailsComponent } from './feature/task/task-details/task-details.component';
 
 export const routes: Routes = [
   {
@@ -28,7 +29,13 @@ export const routes: Routes = [
   },
   { 
     path: 'tasks/by-status', 
-    component: TasksByStatusComponent 
+    component: TasksByStatusComponent,
+    title: 'Tareas por Estado'
+  },
+  { 
+    path: 'tasks/details', 
+    component: TaskDetailsComponent,
+    title: 'Detalles de Tarea'
   },
   {
     path: '**',

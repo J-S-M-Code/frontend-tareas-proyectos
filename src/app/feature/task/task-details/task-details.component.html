@@ -1,0 +1,126 @@
+<div class="p-6 max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
+      Detalles de la Tarea
+    </h1>
+    <p-button label="Limpiar selección" icon="pi pi-filter-slash" severity="secondary" (onClick)="clearSelection()"
+      [text]="true">
+    </p-button>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-8">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Seleccionar Elementos</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <div class="flex flex-col">
+        <label for="projectSelect" class="text-sm font-medium text-gray-700 mb-2">1. Seleccionar Proyecto</label>
+        <select 
+          id="projectSelect"
+          class="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+          (change)="onProjectChange($event)"
+          [disabled]="isLoading()">
+          <option value="" disabled selected [selected]="!selectedProjectId()">Seleccione un proyecto...</option>
+          @for (project of projects(); track project.id) {
+            <option [value]="project.id" [selected]="selectedProjectId() === project.id">{{ project.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="flex flex-col">
+        <label for="taskSelect" class="text-sm font-medium text-gray-700 mb-2">2. Seleccionar Tarea</label>
+        <select 
+          id="taskSelect"
+          class="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          (change)="onTaskChange($event)"
+          [disabled]="!selectedProjectId() || projectTasks().length === 0 || isLoading()">
+          <option value="" disabled selected [selected]="!selectedTaskId()">Seleccione una tarea...</option>
+          @for (task of projectTasks(); track task.id) {
+            <option [value]="task.id" [selected]="selectedTaskId() === task.id">{{ task.title }}</option>
+          }
+        </select>
+        @if (selectedProjectId() && projectTasks().length === 0 && !isLoading()) {
+          <span class="text-xs text-orange-500 mt-2"><i class="pi pi-info-circle mr-1"></i>Este proyecto no tiene tareas disponibles.</span>
+        }
+      </div>
+
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="flex justify-center items-center py-16">
+    <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+  </div>
+  }
+
+  @if (errorMessage() && !isLoading()) {
+  <div class="bg-red-50 p-8 rounded-xl flex flex-col items-center border border-red-200 shadow-sm mb-8">
+    <i class="pi pi-exclamation-triangle text-5xl text-red-500 mb-4"></i>
+    <p class="text-red-700 font-semibold mb-6 text-center">{{ errorMessage() }}</p>
+    <div class="flex gap-3">
+      <p-button label="Intentar de nuevo" icon="pi pi-refresh" (onClick)="retry()" [outlined]="true" severity="danger">
+      </p-button>
+    </div>
+  </div>
+  }
+
+  @if (taskData() && !isLoading() && !errorMessage()) {
+  <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden mb-8">
+    <div
+      class="p-8 border-b border-gray-100 bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ taskData()!.title }}</h2>
+        <p class="text-sm text-gray-500 flex gap-4">
+          <span><i class="pi pi-calendar mr-1"></i> Creada: {{ taskData()!.createdAt | date: 'dd/MM/yyyy HH:mm'
+            }}</span>
+          <span><i class="pi pi-clock mr-1"></i> Finalizada: {{ taskData()!.finishedAt | date: 'dd/MM/yyyy HH:mm'
+            }}</span>
+        </p>
+      </div>
+      <p-tag [value]="getStatusLabel(taskData()!.status)"
+        [severity]="taskData()!.status === 'DONE' ? 'success' : (taskData()!.status === 'IN_PROGRESS' ? 'info' : 'warn')"
+        styleClass="text-sm px-3 py-1 font-semibold tracking-wide">
+      </p-tag>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+      <i class="pi pi-comments text-blue-500"></i> Comentarios
+      <span class="bg-gray-100 text-gray-600 text-sm py-0.5 px-2.5 rounded-full font-semibold">{{
+        taskData()!.comments.length }}</span>
+    </h3>
+
+    @if (taskData()!.comments.length === 0) {
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-8 flex flex-col items-center justify-center text-center">
+      <i class="pi pi-info-circle text-4xl text-blue-400 mb-3"></i>
+      <p class="text-blue-800 font-medium text-lg mb-1">Aún no hay comentarios en esta tarea</p>
+      <p class="text-blue-600 text-sm">Sé el primero en aportar detalles adicionales a esta tarea.</p>
+    </div>
+    } @else {
+    <div class="space-y-4">
+      @for (comment of taskData()!.comments; track comment.id) {
+      <div class="bg-white p-6 rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all">
+        <div class="flex items-start justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold border border-blue-200 flex-shrink-0">
+              {{ comment.author ? comment.author.charAt(0).toUpperCase() : 'U' }}
+            </div>
+            <div>
+              <p class="font-semibold text-gray-900">{{ comment.author || 'Usuario Desconocido' }}</p>
+              <p class="text-xs text-gray-500">
+                {{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p class="text-gray-700 leading-relaxed ml-13 whitespace-pre-wrap">
+          {{ comment.text}}
+        </p>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  }
+</div>
