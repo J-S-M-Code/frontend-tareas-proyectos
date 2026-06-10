@@ -57,7 +57,7 @@ export class TaskDetailsComponent implements OnInit {
   loadProjects() {
     this.isLoading.set(true);
     this.projectService.getAllProjects().subscribe({
-      next: (data: any[]) => {
+      next: (data: ProjectResponseDTO[]) => {
         this.projects.set(data);
         this.isLoading.set(false);
       },
