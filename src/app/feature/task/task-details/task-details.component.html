@@ -21,7 +21,7 @@
           [disabled]="isLoading()">
           <option value="" disabled selected [selected]="!selectedProjectId()">Seleccione un proyecto...</option>
           @for (project of projects(); track project.id) {
-            <option [value]="project.id" [selected]="selectedProjectId() === project.id">{{ project.name || project.name }}</option>
+            <option [value]="project.id" [selected]="selectedProjectId() === project.id">{{ project.name }}</option>
           }
         </select>
       </div>

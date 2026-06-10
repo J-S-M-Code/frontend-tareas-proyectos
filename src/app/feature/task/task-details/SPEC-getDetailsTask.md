@@ -1,4 +1,4 @@
-# SPEC: Obtener Detalles de la Tarea (Get Deatails Task)
+# SPEC: Obtener Detalles de la Tarea (Get Details Task)
 
 ## Nombre de la feature
 Get Task Details (Visualización de los detalles de una tarea y sus comentarios).
@@ -35,19 +35,19 @@ Implementar una vista que permita al usuario consultar la información detallada
 ## Criterios de aceptación
 
 ### Escenario 1: Visualización exitosa de la tarea y sus comentarios
-- **Dado** que el usuario navega a la ruta de detalles de una tarea válida
-- **Cuando** el componente se inicializa y el backend responde exitosamente con los datos
+- **Dado** que el usuario selecciona un proyecto válido y luego elige una tarea válida desde los selectores
+- **Cuando** el componente solicita y el backend responde exitosamente con los datos
 - **Entonces** el sistema oculta el indicador de carga y renderiza la información de la tarea (título, descripción, estado) junto con la lista de comentarios ordenados, mostrando el texto y el autor de cada uno.
 
 ### Escenario 2: Tarea sin comentarios asociados
-- **Dado** que el usuario ingresa a los detalles de una tarea válida
+- **Dado** que el usuario selecciona los detalles de una tarea válida
 - **Cuando** el backend responde exitosamente pero el arreglo de comentarios está vacío
 - **Entonces** la vista renderiza la información principal de la tarea y en la sección de comentarios muestra un mensaje o Empty State amigable indicando que no hay comentarios.
 
 ### Escenario 3: Manejo de errores (Tarea o Proyecto no encontrados)
-- **Dado** que el usuario ingresa manualmente una URL con un `projectId` o `taskId` inexistente
+- **Dado** que el usuario selecciona un `projectId` o `taskId` que ya no existe (ej. fue eliminado por otro usuario concurrente)
 - **Cuando** el backend responde con un error `404 Not Found`
-- **Entonces** el indicador de carga se detiene y la vista muestra un mensaje claro indicando que "La tarea solicitada no existe o fue eliminada", ofreciendo un botón para volver al listado del proyecto.
+- **Entonces** el indicador de carga se detiene y la vista muestra un mensaje claro indicando que "La tarea solicitada no existe o fue eliminada".
 
 ### Escenario 4: Manejo de errores de conexión o servidor
 - **Dado** que el usuario intenta visualizar los detalles de una tarea

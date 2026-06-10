@@ -38,8 +38,7 @@ export class TaskDetailsComponent implements OnInit {
   loadProjects() {
     this.isLoading.set(true);
     this.projectService.getAllProjects().subscribe({
-      // Tipado 'data' a any[] por ahora, o al tipo que devuelva tu servicio
-      next: (data: any[]) => {
+      next: (data: ProjectResponseDTO[]) => {
         this.projects.set(data);
         this.isLoading.set(false);
       },
