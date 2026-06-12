@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -50,6 +51,7 @@ function dateRangeValidator(group: AbstractControl): ValidationErrors | null {
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     InputTextModule,
     TextareaModule,
     DatePickerModule,

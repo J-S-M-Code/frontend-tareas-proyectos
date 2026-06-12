@@ -1,27 +1,46 @@
-<div class="bg-white shadow-md p-4 mb-6">
-  <div class="max-w-5xl mx-auto flex flex-col md:flex-row flex-wrap gap-4 justify-center items-center">
-    
-    <a pButton label="Inicio" icon="pi pi-home" [routerLink]="['/']" 
-       class="p-button-text p-button-lg w-full sm:w-auto"></a>
-
-    <a pButton label="Crear Proyecto" icon="pi pi-folder-plus" [routerLink]="['/projects/create']" 
-       class="p-button-warning p-button-lg w-full sm:w-auto"></a>
-
-    <a pButton label="Crear Tarea" icon="pi pi-check-square" [routerLink]="['/tasks/create']" 
-       class="p-button-warning p-button-lg w-full sm:w-auto"></a>
-       
-    <a pButton label="Crear Comentario" icon="pi pi-comment" [routerLink]="['/comment/create']" 
-       class="p-button-warning p-button-lg w-full sm:w-auto"></a>
-     
-    <a pButton label="Lista Tareas Por Estado" icon="pi pi-list" [routerLink]="['/tasks/by-status']" 
-       class="p-button-warning p-button-lg w-full sm:w-auto"></a>
-
-    <a pButton label="Detalles de Tarea" icon="pi pi-search" [routerLink]="['/tasks/details']" 
-       class="p-button-warning p-button-lg w-full sm:w-auto"></a>
-
+<nav class="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-gray-200 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex items-center gap-3">
+        <a [routerLink]="['/']" class="flex-shrink-0 flex items-center cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-indigo-600 to-purple-600 p-2 rounded-xl shadow-lg shadow-indigo-200">
+              <i class="pi pi-layer-group text-white text-xl"></i>
+            </div>
+            <span class="font-extrabold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Tareas-Proyectos</span>
+          </div>
+        </a>
+      </div>
+      <div class="hidden md:flex space-x-1 items-center">
+        <a [routerLink]="['/']" routerLinkActive="bg-indigo-50 text-indigo-700" [routerLinkActiveOptions]="{exact: true}"
+           class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 transition-colors flex items-center gap-2">
+           <i class="pi pi-home"></i> Inicio
+        </a>
+        <a [routerLink]="['/projects/create']" routerLinkActive="bg-indigo-50 text-indigo-700"
+           class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 transition-colors flex items-center gap-2">
+           <i class="pi pi-folder-plus"></i> Proyecto
+        </a>
+        <a [routerLink]="['/tasks/create']" routerLinkActive="bg-indigo-50 text-indigo-700"
+           class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 transition-colors flex items-center gap-2">
+           <i class="pi pi-check-square"></i> Tarea
+        </a>
+        <a [routerLink]="['/comment/create']" routerLinkActive="bg-indigo-50 text-indigo-700"
+           class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 transition-colors flex items-center gap-2">
+           <i class="pi pi-comment"></i> Comentario
+        </a>
+        <a [routerLink]="['/tasks/by-status']" routerLinkActive="bg-indigo-50 text-indigo-700"
+           class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 transition-colors flex items-center gap-2">
+           <i class="pi pi-list"></i> Tareas
+        </a>
+        <a [routerLink]="['/tasks/details']" routerLinkActive="bg-indigo-50 text-indigo-700"
+           class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 transition-colors flex items-center gap-2">
+           <i class="pi pi-search"></i> Buscar
+        </a>
+      </div>
+    </div>
   </div>
-</div>
+</nav>
 
-<main class="max-w-5xl mx-auto p-4">
+<main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)]">
   <router-outlet></router-outlet>
 </main>

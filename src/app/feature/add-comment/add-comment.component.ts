@@ -2,10 +2,10 @@ import { Component, ChangeDetectionStrategy, inject, signal, input, OnInit, Dest
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommentTaskService } from '../../services/comment-task.service';
 import { ProjectService, ProjectResponseDTO } from '../../services/project.service';
 import { TaskService, TaskResponseDTO } from '../../services/task.service';
-
 
 // Módulos de PrimeNG
 import { ButtonModule } from 'primeng/button';
@@ -18,7 +18,7 @@ import { MessageModule } from 'primeng/message';
   selector: 'app-add-comment',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, ButtonModule, 
+    CommonModule, ReactiveFormsModule, RouterModule, ButtonModule, 
     InputTextModule, TextareaModule, SelectModule, MessageModule
   ],
   templateUrl: './add-comment.component.html',
@@ -29,7 +29,8 @@ export class AddCommentComponent implements OnInit {
   private projectService = inject(ProjectService);
   private taskService = inject(TaskService);
   private commentTaskService = inject(CommentTaskService);
-  private destroyRef = inject(DestroyRef); // Para desuscribir observables automáticamente
+  private destroyRef = inject(DestroyRef); 
+  private route = inject(ActivatedRoute);
 
   // Signals para las listas de los Dropdowns
   projects = signal<ProjectResponseDTO[]>([]);
@@ -41,25 +42,25 @@ export class AddCommentComponent implements OnInit {
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
+  
+  preselectedProjectId = signal<number | null>(null);
+  preselectedTaskId = signal<number | null>(null);
 
   // Formulario Reactivo
   form = this.fb.group({
-    projectId: [null as number | null, Validators.required],
-    // El control de tareas inicia deshabilitado (como dicta la SPEC)
+    projectId: [{value: null as number | null, disabled: false}, Validators.required],
     taskId: [{ value: null as number | null, disabled: true }, Validators.required],
-    author: ['', [Validators.required, Validators.pattern(/[\S]/)]],
-    text: ['', [Validators.required, Validators.pattern(/[\S]/)]]
+    author: ['', [Validators.required, Validators.pattern(/.*\S.*/)]],
+    text: ['', [Validators.required, Validators.pattern(/.*\S.*/)]]
   });
 
   constructor() {
-    // Escuchamos reactivamente cuando el usuario selecciona un proyecto distinto
     this.form.controls.projectId.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(projectId => {
         if (projectId) {
           this.loadTasks(projectId);
         } else {
-          // Si limpia el proyecto, limpiamos y deshabilitamos tareas
           this.form.controls.taskId.reset();
           this.form.controls.taskId.disable();
           this.tasks.set([]);
@@ -68,16 +69,34 @@ export class AddCommentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProjects();
+    this.route.queryParams.subscribe(params => {
+      const pId = params['projectId'];
+      const tId = params['taskId'];
+      
+      if (pId) {
+        this.preselectedProjectId.set(Number(pId));
+      }
+      if (tId) {
+        this.preselectedTaskId.set(Number(tId));
+      }
+      
+      this.loadProjects();
+    });
   }
 
   private loadProjects(): void {
     this.isProjectsLoading.set(true);
     this.projectService.getAllProjects().subscribe({
       next: (data) => {
-        // Podríamos filtrar aquí para mostrar solo proyectos NO CERRADOS si el negocio lo dicta
         this.projects.set(data);
         this.isProjectsLoading.set(false);
+        
+        const pId = this.preselectedProjectId();
+        if (pId) {
+          this.form.patchValue({ projectId: pId });
+          // If navigated hierarchically, disable project selection
+          this.form.controls.projectId.disable();
+        }
       },
       error: () => {
         this.errorMessage.set('Error al cargar la lista de proyectos.');
@@ -88,14 +107,25 @@ export class AddCommentComponent implements OnInit {
 
   private loadTasks(projectId: number): void {
     this.isTasksLoading.set(true);
-    this.form.controls.taskId.disable(); // Bloqueamos mientras carga
-    this.form.controls.taskId.reset();
+    this.form.controls.taskId.disable(); 
+    // Only reset if we are not initializing from preselected values
+    if (!this.preselectedTaskId()) {
+      this.form.controls.taskId.reset();
+    }
 
     this.taskService.getTasksByProject(projectId).subscribe({
       next: (data) => {
         this.tasks.set(data);
-        this.form.controls.taskId.enable(); // Habilitamos al recibir datos
         this.isTasksLoading.set(false);
+        
+        const tId = this.preselectedTaskId();
+        if (tId && this.form.getRawValue().projectId === this.preselectedProjectId()) {
+          this.form.patchValue({ taskId: tId });
+          // If navigated hierarchically, leave task disabled
+        } else {
+          // If manual selection, enable it
+          this.form.controls.taskId.enable();
+        }
       },
       error: () => {
         this.errorMessage.set('Error al cargar las tareas del proyecto.');
@@ -120,8 +150,10 @@ export class AddCommentComponent implements OnInit {
       .subscribe({
         next: () => {
           this.successMessage.set('Comentario registrado con éxito.');
-          this.form.reset();
-          // Al hacer reset, el listener de valueChanges deshabilitará el dropdown de tareas automáticamente
+          this.form.reset({
+             projectId: this.preselectedProjectId(),
+             taskId: this.preselectedTaskId()
+          });
           this.isSubmitting.set(false);
         },
         error: (err) => {

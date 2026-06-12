@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { AppComponent } from './app';
+import { ProjectListComponent } from './feature/projects/project-list/project-list.component';
+import { ProjectDetailsComponent } from './feature/projects/project-details/project-details.component';
 import { CreateProjectComponent } from './feature/projects/create-project/create-project.component';
 import { TaskCreateComponent } from './feature/task/create-task/create-task.component';
 import { AddCommentComponent } from './feature/add-comment/add-comment.component';
@@ -9,13 +10,23 @@ import { TaskDetailsComponent } from './feature/task/task-details/task-details.c
 export const routes: Routes = [
   {
     path: '',
-    component: AppComponent,
-    title: 'Inicio - Gestión de Tareas y Proyectos'
+    component: ProjectListComponent,
+    title: 'Inicio - Proyectos'
   },
   {
     path: 'projects/create',
     component: CreateProjectComponent,
     title: 'Crear Proyecto'
+  },
+  {
+    path: 'projects/:id',
+    component: ProjectDetailsComponent,
+    title: 'Detalles del Proyecto'
+  },
+  {
+    path: 'projects/:projectId/tasks/:taskId',
+    component: TaskDetailsComponent,
+    title: 'Detalles de Tarea'
   },
   {
     path: 'tasks/create',
@@ -35,7 +46,7 @@ export const routes: Routes = [
   { 
     path: 'tasks/details', 
     component: TaskDetailsComponent,
-    title: 'Detalles de Tarea'
+    title: 'Buscar Tarea'
   },
   {
     path: '**',
