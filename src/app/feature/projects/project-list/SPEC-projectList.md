@@ -26,5 +26,11 @@ Implementar una vista principal que sirva como punto de entrada de la aplicació
 
 ## Criterios de aceptación
 - **Dado** que el usuario ingresa a la ruta raíz (`/`) o `/projects`
-- **Cuando** el servidor responde correctamente
+- **Cuando** el servidor responde correctamente con al menos un proyecto
 - **Entonces** se muestran las tarjetas de los proyectos con un botón "Ver Detalles" que dirige a `/projects/:id`.
+- **Dado** que no hay proyectos creados en el sistema
+- **Cuando** el usuario ingresa a la lista de proyectos
+- **Entonces** se muestra un estado vacío ("No hay proyectos") indicando que debe comenzar creando su primer proyecto.
+- **Dado** que ocurre un error de red o de servidor al obtener los proyectos
+- **Cuando** el usuario ingresa a la vista
+- **Entonces** se muestra un mensaje de error claro en pantalla.

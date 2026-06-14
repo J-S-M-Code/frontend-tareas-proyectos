@@ -57,7 +57,6 @@ export class TasksByStatusComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error(err);
         this.errorMessage.set('Ocurrió un error al obtener las tareas. Por favor, verifique su conexión o intente más tarde.');
         this.isLoading.set(false);
       }

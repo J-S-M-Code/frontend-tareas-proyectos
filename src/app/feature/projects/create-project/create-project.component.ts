@@ -109,7 +109,7 @@ export class CreateProjectComponent {
       ...formValues,
       startDate: formatDate(formValues.startDate, 'yyyy-MM-dd', 'en-US'),
       endDate: formatDate(formValues.endDate, 'yyyy-MM-dd', 'en-US'),
-      status: formValues.status.value || formValues.status, // Depende de cómo PrimeNG emita el valor
+      status: formValues.status,
     };
 
     this.projectService.createProject(projectData).subscribe({

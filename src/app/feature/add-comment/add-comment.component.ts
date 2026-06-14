@@ -157,7 +157,6 @@ export class AddCommentComponent implements OnInit {
           this.isSubmitting.set(false);
         },
         error: (err) => {
-          console.error(err);
           this.errorMessage.set('Error al intentar guardar el comentario.');
           this.isSubmitting.set(false);
         }

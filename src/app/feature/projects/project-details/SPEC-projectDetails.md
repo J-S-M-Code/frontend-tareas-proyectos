@@ -23,6 +23,12 @@ Implementar una vista que, al acceder al ID de un proyecto, despliegue su inform
 - **Gestión de Estado:** Uso de Signals para proyectos y tareas.
 
 ## Criterios de aceptación
-- **Dado** que se ingresa a `/projects/:id`
+- **Dado** que se ingresa a `/projects/:id` de un proyecto existente
 - **Cuando** la data carga
 - **Entonces** se ven las métricas del proyecto y el listado de tareas.
+- **Dado** que se ingresa a `/projects/:id` de un proyecto inexistente
+- **Cuando** la API retorna error o no lo encuentra en la lista local
+- **Entonces** se muestra un mensaje de error y permite volver al inicio.
+- **Dado** que el proyecto no tiene tareas asociadas
+- **Cuando** la data de tareas carga
+- **Entonces** se muestra un estado vacío indicando que "Aún no se han creado tareas para este proyecto".
