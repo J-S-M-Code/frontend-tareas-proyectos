@@ -1,8 +1,10 @@
-<div class="mb-6" *ngIf="preselectedProjectId() && preselectedTaskId()">
+@if (preselectedProjectId() && preselectedTaskId()) {
+<div class="mb-6">
   <a [routerLink]="['/projects', preselectedProjectId(), 'tasks', preselectedTaskId()]" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-2 transition-colors w-fit">
     <i class="pi pi-arrow-left"></i> Volver a la Tarea
   </a>
 </div>
+}
 
 <div class="max-w-2xl mx-auto p-8 bg-white shadow-xl shadow-indigo-100/50 rounded-3xl mt-4 border border-gray-100">
   <div class="flex items-center gap-4 mb-8 border-b border-gray-100 pb-6">

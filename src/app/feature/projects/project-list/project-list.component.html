@@ -7,25 +7,32 @@
      class="p-button-rounded p-button-primary shadow-md hover:shadow-lg transition-all"></a>
 </div>
 
-<div *ngIf="isLoading()" class="flex justify-center my-12">
+@if (isLoading()) {
+<div class="flex justify-center my-12">
   <p-progressSpinner styleClass="w-3rem h-3rem" strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
 </div>
+}
 
-<div *ngIf="errorMessage()" class="my-4">
+@if (errorMessage()) {
+<div class="my-4">
   <p-message severity="error" [text]="errorMessage()!"></p-message>
 </div>
+}
 
-<div *ngIf="!isLoading() && !errorMessage()" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+@if (!isLoading() && !errorMessage()) {
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
   
-  <div *ngIf="projects().length === 0" class="col-span-full text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
+  @if (projects().length === 0) {
+  <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
     <i class="pi pi-folder-open text-4xl text-gray-400 mb-3"></i>
     <h3 class="text-lg font-medium text-gray-900">No hay proyectos</h3>
     <p class="text-gray-500 mb-4">Comienza creando tu primer proyecto para gestionar tareas.</p>
     <a pButton label="Crear Proyecto" icon="pi pi-plus" [routerLink]="['/projects/create']" class="p-button-outlined p-button-sm"></a>
   </div>
+  }
 
-  <div *ngFor="let project of projects()" 
-       class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer flex flex-col group"
+  @for (project of projects(); track project.id) {
+  <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer flex flex-col group"
        [routerLink]="['/projects', project.id]">
     <div class="flex justify-between items-start mb-4">
       <h2 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2">{{ project.name }}</h2>
@@ -37,5 +44,7 @@
       <span class="text-indigo-600 font-medium group-hover:underline flex items-center gap-1">Ver Detalles <i class="pi pi-arrow-right text-xs"></i></span>
     </div>
   </div>
+  }
 
 </div>
+}

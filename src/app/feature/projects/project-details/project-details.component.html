@@ -4,15 +4,20 @@
   </a>
 </div>
 
-<div *ngIf="errorMessage()" class="my-4">
+@if (errorMessage()) {
+<div class="my-4">
   <p-message severity="error" [text]="errorMessage()!"></p-message>
 </div>
+}
 
-<div *ngIf="isLoadingProject()" class="flex justify-center my-12">
+@if (isLoadingProject()) {
+<div class="flex justify-center my-12">
   <p-progressSpinner styleClass="w-3rem h-3rem" strokeWidth="4"></p-progressSpinner>
 </div>
+}
 
-<div *ngIf="project()" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 mb-8">
+@if (project()) {
+<div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 mb-8">
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
     <div>
       <div class="flex items-center gap-3 mb-2">
@@ -29,8 +34,10 @@
        class="p-button-rounded p-button-primary shadow-md hover:shadow-lg transition-all w-full sm:w-auto"></a>
   </div>
 </div>
+}
 
-<div *ngIf="project()">
+@if (project()) {
+<div>
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
     <div class="flex items-center gap-3">
       <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -48,31 +55,40 @@
         [ngModel]="selectedStatus()" 
         (ngModelChange)="selectedStatus.set($event)"
         class="w-full sm:w-48 p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 font-medium transition-colors">
-        <option *ngFor="let s of statuses" [value]="s.value">{{ s.label }}</option>
+        @for (s of statuses; track s.value) {
+        <option [value]="s.value">{{ s.label }}</option>
+        }
       </select>
     </div>
   </div>
 
-  <div *ngIf="isLoadingTasks()" class="flex justify-center my-8">
+  @if (isLoadingTasks()) {
+  <div class="flex justify-center my-8">
     <p-progressSpinner styleClass="w-2rem h-2rem" strokeWidth="4"></p-progressSpinner>
   </div>
+  }
 
-  <div *ngIf="!isLoadingTasks() && tasks().length === 0" class="text-center py-10 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300">
+  @if (!isLoadingTasks() && tasks().length === 0) {
+  <div class="text-center py-10 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300">
     <i class="pi pi-inbox text-4xl text-gray-400 mb-3"></i>
     <h3 class="text-lg font-medium text-gray-900">No hay tareas</h3>
     <p class="text-gray-500 mb-4">Aún no se han creado tareas para este proyecto.</p>
     <a pButton label="Crear Primera Tarea" icon="pi pi-plus" [routerLink]="['/tasks/create']" [queryParams]="{projectId: project()!.id}" class="p-button-outlined p-button-sm"></a>
   </div>
+  }
   
-  <div *ngIf="!isLoadingTasks() && tasks().length > 0 && filteredTasks().length === 0" class="text-center py-10 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300">
+  @if (!isLoadingTasks() && tasks().length > 0 && filteredTasks().length === 0) {
+  <div class="text-center py-10 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300">
     <i class="pi pi-filter text-4xl text-gray-400 mb-3"></i>
     <h3 class="text-lg font-medium text-gray-900">No hay tareas en este estado</h3>
     <p class="text-gray-500">Intenta cambiar el filtro de estado para ver más tareas.</p>
   </div>
+  }
 
-  <div *ngIf="!isLoadingTasks() && filteredTasks().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div *ngFor="let task of filteredTasks()" 
-         class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer flex flex-col group"
+  @if (!isLoadingTasks() && filteredTasks().length > 0) {
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    @for (task of filteredTasks(); track task.id) {
+    <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer flex flex-col group"
          [routerLink]="['/projects', project()!.id, 'tasks', task.id]">
       
       <div class="flex justify-between items-start mb-3">
@@ -84,5 +100,8 @@
         <p-tag [severity]="getTaskSeverity(task.status)" [value]="getTaskStatusLabel(task.status)" styleClass="text-xs"></p-tag>
       </div>
     </div>
+    }
   </div>
+  }
 </div>
+}
