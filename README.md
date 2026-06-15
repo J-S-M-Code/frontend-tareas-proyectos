@@ -24,7 +24,7 @@ To run this project locally, make sure you have the following installed:
 
 1.  **Clone the repository:**
     ```bash
-    git clone <YOUR_REPOSITORY_URL>
+    git clone https://github.com/J-S-M-Code/frontend-tareas-proyectos
     ```
 
 2.  **Navigate to the project directory:**
